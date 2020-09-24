@@ -15,3 +15,15 @@ How large is the area that the robot can access?
 ### Setup
 
 - Simply use plain node.
+
+### Answer
+When the sum of digits of absolute positions are less than and equal to 23
+  
+```
+result {
+  yRange: { max: 698, min: -698 },
+  xRange: { max: 698, min: -698 },
+  area: 592597
+}
+time:  804
+```

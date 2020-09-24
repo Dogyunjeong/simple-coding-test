@@ -1,14 +1,20 @@
-const SAFE_LIMIT = 25
+const SAFE_LIMIT = 23
 
 const sumDigitOfAbs = (num) => {
-    const target = Math.abs(num)
-    let currentDigit = 10
-    let currentNum = target % currentDigit
-    let result = currentNum
-    while (currentNum !== 0) {
-        result += currentNum
-        currentDigit = currentDigit * 10
-        currentNum = Math.floor(target / currentDigit)
+    // const target = Math.abs(num)
+    // let currentDigit = 10
+    // let currentNum = target % currentDigit
+    // let result = currentNum
+    // while (currentNum !== 0) {
+    //     result += currentNum
+    //     currentDigit = currentDigit * 10
+    //     currentNum = Math.floor(target / currentDigit)
+    // }
+
+    const target = Math.abs(num).toString()
+    let result = 0
+    for (let i = 0; i < target.length ; i++) {
+        result += parseInt(target[i])
     }
 
     return result
@@ -29,8 +35,8 @@ const changePos = (pos, changePos) => {
         y: pos.y + changePos.y,
     }
 }
-const checkSafeArea = (pos, safeArea) => {
-    if (safeArea[pos.y] && safeArea[pos.y][pos.x]) {
+const hasBeenThisArea = (pos, safeArea) => {
+    if (safeArea[pos.y] && safeArea[pos.y][pos.x] === true) {
         return true
     }
     return false
@@ -44,7 +50,7 @@ const addSafeArea = (pos, safeArea) => {
 
 const findSafeArea = (currentPos, safeArea, stack, yRange, xRange, result) => {
     return new Promise((resolve) => {
-        if (checkSafeArea(currentPos, safeArea)) {
+        if (hasBeenThisArea(currentPos, safeArea)) {
             return
         }
         if (!isCurrentPositionSafe(currentPos)) {
