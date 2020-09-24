@@ -10,12 +10,6 @@ const sumDigitOfAbs = (num) => {
         currentDigit = currentDigit * 10
         currentNum = Math.floor(target / currentDigit)
     }
-    // const result = target
-    //     .toString()
-    //     .split('')
-    //     .reduce((reducer, num) => {
-    //         return reducer + parseInt(num, 10, null)
-    //     }, 0)
 
     return result
 }
@@ -48,7 +42,7 @@ const addSafeArea = (pos, safeArea) => {
     safeArea[pos.y][pos.x] = true
 }
 
-const findSafeArea = (currentPos, safeArea, stack, yRange, xRange) => {
+const findSafeArea = (currentPos, safeArea, stack, yRange, xRange, result) => {
     return new Promise((resolve) => {
         if (checkSafeArea(currentPos, safeArea)) {
             return
@@ -57,15 +51,16 @@ const findSafeArea = (currentPos, safeArea, stack, yRange, xRange) => {
             return
         }
         addSafeArea(currentPos, safeArea)
+        result.area += 1
         yRange.max = Math.max(yRange.max, currentPos.y)
         yRange.min = Math.min(yRange.min, currentPos.y)
         xRange.max = Math.max(xRange.max, currentPos.x)
         xRange.min = Math.min(xRange.min, currentPos.x)
         stack.push(() => {
-            findSafeArea(changePos(currentPos, { x: -1, y: 0 }), safeArea, stack, yRange, xRange)
-            findSafeArea(changePos(currentPos, { x: 1, y: 0 }), safeArea, stack, yRange, xRange)
-            findSafeArea(changePos(currentPos, { x: 0, y: -1 }), safeArea, stack, yRange, xRange)
-            findSafeArea(changePos(currentPos, { x: 0, y: 1 }), safeArea, stack, yRange, xRange)
+            findSafeArea(changePos(currentPos, { x: -1, y: 0 }), safeArea, stack, yRange, xRange, result)
+            findSafeArea(changePos(currentPos, { x: 1, y: 0 }), safeArea, stack, yRange, xRange, result)
+            findSafeArea(changePos(currentPos, { x: 0, y: -1 }), safeArea, stack, yRange, xRange, result)
+            findSafeArea(changePos(currentPos, { x: 0, y: 1 }), safeArea, stack, yRange, xRange, result)
         })
         resolve()
     })
@@ -77,9 +72,10 @@ const solution = async () => {
     const safeArea = {}
     const xRange = { max: 0, min: 0 }
     const yRange = { max: 0, min: 0 }
+    const result = { area: 0 } 
     const stack = [() => {
         return new Promise((resolve) => {
-            findSafeArea(startPos, safeArea, stack, yRange, xRange)
+            findSafeArea(startPos, safeArea, stack, yRange, xRange, result)
             resolve()
         })
     }]
@@ -90,6 +86,7 @@ const solution = async () => {
     return {
         yRange,
         xRange,
+        area: result.area,
     }
 
 }
